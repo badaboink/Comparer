@@ -6,6 +6,8 @@ from comparer import views
 
 router = routers.DefaultRouter()
 router.register(r'category', views.CategoryViewSet)
+router.register(r'playlist', views.PlaylistViewSet)
+router.register(r'song', views.SongViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
