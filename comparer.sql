@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 01, 2023 at 10:19 PM
--- Server version: 10.4.24-MariaDB
--- PHP Version: 8.1.6
+-- Generation Time: Oct 02, 2023 at 02:17 PM
+-- Server version: 10.4.22-MariaDB
+-- PHP Version: 8.1.2
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -173,7 +173,7 @@ INSERT INTO `comparer_category` (`id`, `name`, `description`) VALUES
 (11, 'Indie Innovations', 'Explore the diverse and ever-evolving world of indie music, where creativity knows no bounds.'),
 (12, 'Shoegaze Soundscapes', 'Get lost in the dreamy, hazy atmospheres of shoegaze, where the music envelops you like a warm embrace.'),
 (13, 'Riot Girl Revolution', 'Join the punk-rock rebellion with fearless and empowering anthems from riot girl pioneers and modern icons.'),
-(14, 'Drain Gang Collective', 'Dive into the experimental and genre-blurring sounds of Drain Gang, where art and music collide in unpredictable ways.');
+(14, 'Cloud rap', 'Dive into the experimental and genre-blurring sounds of cloud rap, where art and music collide in unpredictable ways.');
 
 -- --------------------------------------------------------
 
@@ -201,7 +201,7 @@ INSERT INTO `comparer_playlist` (`id`, `name`, `description`, `image`, `category
 (5, 'Indie Folk Serenity', 'Find solace in the soothing melodies and heartfelt storytelling of indie folk\'s finest troubadours.', 'playlists/tumblr_3e920c7c8762887d66565a04aa9b073f_8568fd94_2048.jpg', 9),
 (6, 'Shoegaze Reverie Escapes', 'Let the lush and reverberating soundscapes of shoegaze transport you to a world of pure imagination.', 'playlists/tumblr_7d4e281817462e668379773f9973dcca_621e8cfe_2048.jpg', 12),
 (7, 'Riot Girl Revolutionaries', 'Celebrate the fearless women of the riot girl movement who challenged the status quo and left an indelible mark on music.', 'playlists/tumblr_9ce86817a43c2365a262e960f69a1671_0102be7b_2048.jpg', 13),
-(8, 'Drain Gang Hypnotica', 'Dive deep into the hypnotic beats and experimental sounds that define the Drain Gang collective.', 'playlists/tumblr_19b530209bca26b17432bc44fd03b50b_f8041c2d_2048.jpg', 14),
+(8, 'L-hyperpop Hypnotica', 'Dive deep into the hypnotic beats and experimental sounds that define the upcoming lithuanian hyperpop.', 'playlists/tumblr_19b530209bca26b17432bc44fd03b50b_f8041c2d_2048.jpg', 14),
 (9, 'Indie Pop Sunshine', 'Catch a ray of musical sunshine with catchy indie pop tunes that\'ll brighten your day.', 'playlists/tumblr_439b1c50fced9783a5a93314ed58b4be_896a6673_2048.jpg', 11),
 (10, 'Shoegaze Twilight Drift', 'As day turns to night, let the moody and introspective melodies of shoegaze guide you through the twilight hours.', 'playlists/tumblr_adf7f7257da6ddfc5ac95a24f0e14a67_9897efc8_2048.jpg', 11);
 
@@ -247,7 +247,7 @@ CREATE TABLE `comparer_song_playlist` (
 INSERT INTO `comparer_song_playlist` (`id`, `song_id`, `playlist_id`) VALUES
 (1, 1, 1),
 (2, 1, 2),
-(3, 1, 3);
+(3, 1, 9);
 
 -- --------------------------------------------------------
 
