@@ -19,22 +19,23 @@ class SongViewSet(viewsets.ModelViewSet):
     serializer_class = SongSerializer
 
 
-# class PlaylistByCategoryView(viewsets.ModelViewSet):
-#     serializer_class = PlaylistSerializer
-#
-#     def get_queryset(self):
-#         category = self.request.query_params.get('category')
-#         if category:
-#             return Playlist.objects.filter(category_id=category)
-#         else:
-#             return Playlist.objects.all()
+class PlaylistByCategoryView(viewsets.ModelViewSet):
+    serializer_class = PlaylistSerializer
 
-# class SongInPlaylistView(generics.ListAPIView):
-#     serializer_class = SongSerializer
-#
-#     def get_queryset(self):
-#         playlist = self.request.query_params.get('playlist')
-#         if playlist:
-#             return Song.objects.filter(playlist=playlist)
-#         else:
-#             return Playlist.objects.all()
+    def get_queryset(self):
+        category = self.request.query_params.get('category')
+        if category:
+            return Playlist.objects.filter(category_id=category)
+        else:
+            return Playlist.objects.all()
+
+
+class SongsInPlaylistView(viewsets.ModelViewSet):
+    serializer_class = SongSerializer
+
+    def get_queryset(self):
+        playlist_id = self.request.query_params.get('playlist')
+        if playlist_id:
+            return Song.objects.filter(playlist__id=playlist_id)
+        else:
+            return Song.objects.all()
