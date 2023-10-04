@@ -1,4 +1,5 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions, status
+from rest_framework.response import Response
 from .models import Category, Playlist, Song
 from .serializers import CategorySerializer, PlaylistSerializer, SongSerializer
 
@@ -18,15 +19,15 @@ class SongViewSet(viewsets.ModelViewSet):
     serializer_class = SongSerializer
 
 
-class PlaylistByCategoryView(viewsets.ModelViewSet):
-    serializer_class = PlaylistSerializer
-
-    def get_queryset(self):
-        category = self.request.query_params.get('category')
-        if category:
-            return Playlist.objects.filter(category_id=category)
-        else:
-            return Playlist.objects.all()
+# class PlaylistByCategoryView(viewsets.ModelViewSet):
+#     serializer_class = PlaylistSerializer
+#
+#     def get_queryset(self):
+#         category = self.request.query_params.get('category')
+#         if category:
+#             return Playlist.objects.filter(category_id=category)
+#         else:
+#             return Playlist.objects.all()
 
 # class SongInPlaylistView(generics.ListAPIView):
 #     serializer_class = SongSerializer
