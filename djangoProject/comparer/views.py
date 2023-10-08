@@ -1,3 +1,4 @@
+from django.http import Http404
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from .models import Category, Playlist, Song
@@ -23,11 +24,14 @@ class PlaylistByCategoryView(viewsets.ModelViewSet):
     serializer_class = PlaylistSerializer
 
     def get_queryset(self):
-        category = self.request.query_params.get('category')
-        if category:
-            return Playlist.objects.filter(category_id=category)
+        category_id = self.request.query_params.get('category')
+        if Category.objects.filter(id=category_id).exists():
+            if category_id:
+                return Playlist.objects.filter(category__id=category_id)
+            else:
+                return Playlist.objects.all()
         else:
-            return Playlist.objects.all()
+            raise Http404("Category not found")
 
 
 class SongsInPlaylistView(viewsets.ModelViewSet):
@@ -35,7 +39,10 @@ class SongsInPlaylistView(viewsets.ModelViewSet):
 
     def get_queryset(self):
         playlist_id = self.request.query_params.get('playlist')
-        if playlist_id:
-            return Song.objects.filter(playlist__id=playlist_id)
+        if Playlist.objects.filter(id=playlist_id).exists():
+            if playlist_id:
+                return Song.objects.filter(playlist__id=playlist_id)
+            else:
+                return Song.objects.all()
         else:
-            return Song.objects.all()
+            raise Http404("Playlist not found")
