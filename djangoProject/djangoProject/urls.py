@@ -3,20 +3,28 @@ from django.urls import path, include, re_path
 from rest_framework import routers
 
 from comparer import views
-
 router = routers.DefaultRouter()
-router.register(r'category', views.CategoryViewSet)
 router.register(r'playlist', views.PlaylistViewSet)
 router.register(r'song', views.SongViewSet)
-router.register(r'category/(?P<category_id>[0-9]+)/playlist', views.PlaylistByCategoryView, basename='playlist-by-category')
-router.register(r'playlist/(?P<playlist_id>[0-9]+)/song', views.SongsInPlaylistView, basename='song-by-playlist')
-# router.register(
-#     r'category/(?P<category_id>[0-9]+)/playlist/(?P<playlist_id>[0-9]+)',
-#     views.PlaylistByCategoryViewID,
-#     basename='playlist-by-category-id'
-# )
 
+# todo:
+# postman
+# email
 urlpatterns = [
     path('', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    re_path(r'^categories/?$', views.handle_category, name='handle_category'),
+    re_path(r'^categories/(?P<pk>\d+)/?$', views.handle_category_id, name='handle_category_id'),
+
+    re_path(r'categories/(?P<pk>\d+)/playlists/?$', views.handle_playlist, name='handle_playlist'),
+    re_path(r'categories/(?P<pk>\d+)/playlists/(?P<cid>\d+)/?$', views.handle_playlist_id, name='handle_playlist_id'),
+
+    re_path(r'categories/(?P<pk>\d+)/playlists/(?P<cid>\d+)/songs/?$', views.handle_song, name='handle_song'),
+    re_path(r'categories/(?P<pk>\d+)/playlists/(?P<cid>\d+)/songs/(?P<tid>\d+)/?$', views.handle_song_id,
+         name='handle_song_id'),
+
+    re_path(r'playlists/(?P<cid>\d+)/songs/?$', views.handle_song_by_playlist, name='handle_song'),
+    re_path(r'playlists/(?P<cid>\d+)/songs/(?P<tid>\d+)/?$', views.handle_song_by_playlist_id,
+         name='handle_song_id'),
+
+    path('admin/', admin.site.urls),
 ]
