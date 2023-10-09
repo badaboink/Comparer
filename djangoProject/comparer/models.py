@@ -24,7 +24,7 @@ class Song(models.Model):
     artist = models.CharField(max_length=100)
     year = models.IntegerField(null=True, default=None)
     genre = models.CharField(max_length=50)
-    playlist = models.ManyToManyField('Playlist', related_name='songs')
+    playlist = models.ManyToManyField('Playlist', related_name='songs', null=True, blank=True)
     artwork = models.ImageField(upload_to='artworks/', null=True, blank=True)
     song_file = models.FileField(upload_to='songs/', null=True, blank=True)
 
