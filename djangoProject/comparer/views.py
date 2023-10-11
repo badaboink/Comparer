@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.exceptions import ValidationError
 from .models import Category, Playlist, Song
 from .serializers import CategorySerializer, PlaylistSerializer, SongSerializer
 
@@ -36,14 +37,16 @@ def handle_song(request):
             if Playlist.objects.filter(id__in=playlist_ids).count() != len(playlist_ids):
                 return JsonResponse({'success': False, 'error': f'Wrong playlist data'}, status=400)
             serializer = SongSerializer(data=data)
-
+            serializer.validate(data)
             if serializer.is_valid():
                 song = serializer.save(playlist=playlist_ids)
                 return JsonResponse({'success': True, 'playlist': serializer.data}, status=201)
             else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return JsonResponse({'success': False, 'error': serializer.errors}, status=400)
         except json.JSONDecodeError:
             return JsonResponse({'success': False, 'error': 'Invalid JSON data'}, status=400)
+        except ValidationError as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=400)
 
     elif request.method == 'GET':
         try:
@@ -53,7 +56,7 @@ def handle_song(request):
         except json.JSONDecodeError:
             return JsonResponse({'success': False, 'error': 'Invalid JSON data'}, status=400)
     else:
-        return JsonResponse({'error': 'Method not allowed.'}, status=405)
+        return JsonResponse({'success': False, 'error': 'Method not allowed.'}, status=405)
 
 
 @api_view(['GET', 'PATCH', 'DELETE'])
@@ -86,11 +89,11 @@ def handle_song_id(request, pk):
             if serializer.is_valid():
                 serializer.save()
                 return JsonResponse(serializer.data, status=200)
-            return JsonResponse(serializer.errors, status=400)
+            return JsonResponse({'success': False, 'error': serializer.errors}, status=400)
         except json.JSONDecodeError:
             return JsonResponse({'success': False, 'error': 'Invalid JSON data'}, status=400)
     else:
-        return JsonResponse({'error': 'Method not allowed.'}, status=405)
+        return JsonResponse({'success': False, 'error': 'Method not allowed.'}, status=405)
 
 
 #playlists/
@@ -99,24 +102,20 @@ def handle_playlist(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            category_id = data.get('category')
-            category = Category.objects.get(id=category_id)
-            data = {
-                'name': request.data.get('name'),
-                'description': request.data.get('description'),
-                'category': category_id,
-            }
             serializer = PlaylistSerializer(data=data)
-
+            serializer.validate(data)
+            category_id = data.get('category')
             if serializer.is_valid():
                 playlist = serializer.save(category_id=category_id)
                 return JsonResponse({'success': True, 'playlist': serializer.data}, status=201)
             else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return JsonResponse({'success': False, 'error': serializer.errors}, status=400)
         except json.JSONDecodeError:
             return JsonResponse({'success': False, 'error': 'Invalid JSON data'}, status=400)
         except Category.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Category not found'}, status=400)
+        except ValidationError as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=400)
 
     elif request.method == 'GET':
         try:
@@ -126,7 +125,7 @@ def handle_playlist(request):
         except json.JSONDecodeError:
             return JsonResponse({'success': False, 'error': 'Invalid JSON data'}, status=400)
     else:
-        return JsonResponse({'error': 'Method not allowed.'}, status=405)
+        return JsonResponse({'success': False, 'error': 'Method not allowed.'}, status=405)
 
 
 @api_view(['GET', 'PATCH', 'DELETE'])
@@ -158,13 +157,13 @@ def handle_playlist_id(request, pk):
             if serializer.is_valid():
                 serializer.save()
                 return JsonResponse(serializer.data, status=200)
-            return JsonResponse(serializer.errors, status=400)
+            return JsonResponse({'success': False, 'error': serializer.errors}, status=400)
         except json.JSONDecodeError:
             return JsonResponse({'success': False, 'error': 'Invalid JSON data'}, status=400)
         except Category.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Category not found'}, status=400)
     else:
-        return JsonResponse({'error': 'Method not allowed.'}, status=405)
+        return JsonResponse({'success': False, 'error': 'Method not allowed.'}, status=405)
 
 
 #categories/
@@ -173,15 +172,17 @@ def handle_category(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            category = Category(**data)
-            serializer = CategorySerializer(category, data=request.data)
+            serializer = CategorySerializer(data=request.data)
+            serializer.validate(data)
             if serializer.is_valid():
-                category.save()
+                serializer.save()
                 return JsonResponse({'success': True, 'category': serializer.data}, status=201)
             else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return JsonResponse({'success': False, 'error': serializer.errors}, status=400)
         except json.JSONDecodeError:
             return JsonResponse({'success': False, 'error': 'Invalid JSON data'}, status=400)
+        except ValidationError as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=400)
 
     elif request.method == 'GET':
         try:
@@ -191,11 +192,12 @@ def handle_category(request):
         except json.JSONDecodeError:
             return JsonResponse({'success': False, 'error': 'Invalid JSON data'}, status=400)
     else:
-        return JsonResponse({'error': 'Method not allowed.'}, status=405)
+        return JsonResponse({'success': False, 'error': 'Method not allowed.'}, status=405)
 
 
 class EmptyDataError(Exception):
     pass
+
 
 @api_view(['GET', 'PATCH', 'DELETE'])
 def handle_category_id(request, pk):
@@ -228,7 +230,7 @@ def handle_category_id(request, pk):
         except json.JSONDecodeError:
             return JsonResponse({'success': False, 'error': 'Invalid JSON data'}, status=400)
     else:
-        return JsonResponse({'error': 'Method not allowed.'}, status=405)
+        return JsonResponse({'success': False, 'error': 'Method not allowed.'}, status=405)
 
 
 #categories/(?P<pk>\d+)/playlists/
@@ -241,20 +243,19 @@ def handle_playlist_hierarchy(request, pk):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            category = Category.objects.get(id=pk)
-            data = {
-                'name': request.data.get('name'),
-                'description': request.data.get('description'),
-                'category': pk,
-            }
-
             serializer = PlaylistSerializer(data=data)
+            serializer.validate(data)
+            category_id = data.get('category')
+            if category_id != pk:
+                return JsonResponse({'success': False, 'error': "Body and URL category id mismatch"}, status=400)
             if serializer.is_valid():
                 playlist = serializer.save(category_id=pk)
                 return JsonResponse({'success': True, 'playlist': serializer.data}, status=201)
             else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return JsonResponse({'success': False, 'error': serializer.errors}, status=400)
         except (json.JSONDecodeError, KeyError, Category.DoesNotExist) as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=400)
+        except ValidationError as e:
             return JsonResponse({'success': False, 'error': str(e)}, status=400)
     if request.method == 'GET':
         try:
@@ -396,6 +397,8 @@ def handle_song_basic(cid, request):
     elif request.method == 'POST':
         try:
             data = json.loads(request.body)
+            serializertemp = SongSerializer(data=data)
+            serializertemp.validate(data)
             playlists = []
             if 'playlist' in request.data:
                 if isinstance(request.data.get('playlist'), list):
@@ -419,8 +422,10 @@ def handle_song_basic(cid, request):
                 song.playlist.set(playlists)
                 return JsonResponse({'success': True, 'song': serializer.data}, status=201)
             else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except (json.JSONDecodeError, KeyError, Category.DoesNotExist) as e:
             return JsonResponse({'success': False, 'error': str(e)}, status=400)
+        except ValidationError as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=400)
     else:
-        return JsonResponse({'error': 'Method not allowed.'}, status=405)
+        return JsonResponse({'success': False, 'error': 'Method not allowed.'}, status=405)
