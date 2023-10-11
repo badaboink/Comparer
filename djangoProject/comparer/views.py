@@ -251,7 +251,7 @@ def handle_playlist_hierarchy(request, pk):
             serializer = PlaylistSerializer(data=data)
             if serializer.is_valid():
                 playlist = serializer.save(category_id=pk)
-                return JsonResponse({'success': True, 'playlist': data}, status=201)
+                return JsonResponse({'success': True, 'playlist': serializer.data}, status=201)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except (json.JSONDecodeError, KeyError, Category.DoesNotExist) as e:
@@ -402,8 +402,8 @@ def handle_song_basic(cid, request):
                     playlists = list(set(request.data.get('playlist')))
                 else:
                     return JsonResponse({'success': False, 'error': 'Invalid JSON data'}, status=400)
-            if cid not in playlists:
-                playlists.append(cid)
+            if int(cid) not in playlists:
+                playlists.append(int(cid))
 
             data = {
                 'name': request.data.get('name'),
@@ -417,7 +417,7 @@ def handle_song_basic(cid, request):
             if serializer.is_valid():
                 song = serializer.save()
                 song.playlist.set(playlists)
-                return JsonResponse({'success': True, 'song': data}, status=201)
+                return JsonResponse({'success': True, 'song': serializer.data}, status=201)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except (json.JSONDecodeError, KeyError, Category.DoesNotExist) as e:
