@@ -1,20 +1,55 @@
 import json
-from json import JSONDecodeError
 
-from django.http import Http404, JsonResponse, HttpResponseNotFound, HttpResponse
-from django.shortcuts import get_object_or_404
+from django.contrib.auth.forms import UserCreationForm
+from django.db import transaction
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework import viewsets, permissions, status
+from rest_framework import viewsets, permissions, status, generics
 from rest_framework.decorators import api_view
-from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from .models import Category, Playlist, Song
-from .serializers import CategorySerializer, PlaylistSerializer, SongSerializer
+from .serializers import CategorySerializer, PlaylistSerializer, SongSerializer, GroupSerializer
+from oauth2_provider.contrib.rest_framework import TokenHasScope
+from django.contrib.auth.models import Group
+
+from .customs import custom_permissions
 
 
+# register
+# will remover csrf exemption when adding front
+@csrf_exempt
+@transaction.atomic
+def UserRegister(request):
+    user = request.user
+    if not user.groups.exists() or user.groups.filter(name='Admin').exists():
+
+        if request.method == 'POST':
+            try:
+                request_data = json.loads(request.data.decode('utf-8'))
+            except json.JSONDecodeError:
+                return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+
+            form = UserCreationForm(request_data)
+            if form.is_valid():
+                user = form.save()
+
+                group, created = Group.objects.get_or_create(name='Normal')
+                user.groups.add(group)
+
+                return JsonResponse({'message': 'User registered successfully'})
+
+            errors = dict(form.errors)
+            return JsonResponse({'errors': errors}, status=400)
+
+        return JsonResponse({'message': 'Only POST requests are allowed for user registration'}, status=405)
+    return JsonResponse({'message': 'Access denied. You must be an admin or not logged in to register users.'}, status=403)
+
+
+#viewsets
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    required_scopes = ['categories']
 
 
 class PlaylistViewSet(viewsets.ModelViewSet):
@@ -27,22 +62,37 @@ class SongViewSet(viewsets.ModelViewSet):
     serializer_class = SongSerializer
 
 
+class GroupList(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated, custom_permissions.CanAccessGroups, TokenHasScope]
+    required_scopes = ['groups']
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
+
+
 #songs/
+@transaction.atomic
 @api_view(['GET', 'POST'])
 def handle_song(request):
     if request.method == 'POST':
         try:
-            data = json.loads(request.body)
+            data = request.data
             playlist_ids = data.get('playlist')
-            if Playlist.objects.filter(id__in=playlist_ids).count() != len(playlist_ids):
-                return JsonResponse({'success': False, 'error': f'Wrong playlist data'}, status=400)
-            serializer = SongSerializer(data=data)
-            serializer.validate(data)
-            if serializer.is_valid():
-                song = serializer.save(playlist=playlist_ids)
-                return JsonResponse({'success': True, 'playlist': serializer.data}, status=201)
+            if playlist_ids:
+                invalid_playlists = Playlist.objects.filter(id__in=playlist_ids).exclude(playlist_owner=request.user)
+
+                if invalid_playlists.exists() and not request.user.groups.filter(name='Admin').exists():
+                    return JsonResponse({'success': False, 'error': 'Some playlists do not belong to you.'}, status=400)
+
+                serializer = SongSerializer(data=request.data, context={'request': request})
+                serializer.validate(data)
+
+                if serializer.is_valid():
+                    song = serializer.save(playlist=playlist_ids, song_owner=request.user)
+                    return JsonResponse({'success': True, 'playlist': serializer.data}, status=201)
+                else:
+                    return JsonResponse({'success': False, 'error': serializer.errors}, status=400)
             else:
-                return JsonResponse({'success': False, 'error': serializer.errors}, status=400)
+                return JsonResponse({'success': False, 'error': 'No playlist IDs provided.'}, status=400)
         except json.JSONDecodeError:
             return JsonResponse({'success': False, 'error': 'Invalid JSON data'}, status=400)
         except ValidationError as e:
@@ -78,7 +128,7 @@ def handle_song_id(request, pk):
 
     elif request.method == 'PATCH':
         try:
-            data = json.loads(request.body.decode('utf-8'))
+            data = json.loads(request.data.decode('utf-8'))
             if not data:
                 return JsonResponse({'success': False, 'error': 'Empty data in PATCH request'}, status=400)
             if data.get('playlist'):
@@ -97,17 +147,18 @@ def handle_song_id(request, pk):
 
 
 #playlists/
+@transaction.atomic
 @api_view(['GET', 'POST'])
 def handle_playlist(request):
     if request.method == 'POST':
         try:
-            data = json.loads(request.body)
-            serializer = PlaylistSerializer(data=data)
-            serializer.validate(data)
-            category_id = data.get('category')
+            serializer = PlaylistSerializer(data=request.data, context={'request': request})
+            category_id = request.data.get('category')
             if serializer.is_valid():
                 playlist = serializer.save(category_id=category_id)
-                return JsonResponse({'success': True, 'playlist': serializer.data}, status=201)
+                return JsonResponse(
+                    {'success': True, 'playlist': serializer.data},
+                    status=201)
             else:
                 return JsonResponse({'success': False, 'error': serializer.errors}, status=400)
         except json.JSONDecodeError:
@@ -147,7 +198,7 @@ def handle_playlist_id(request, pk):
 
     elif request.method == 'PATCH':
         try:
-            data = json.loads(request.body.decode('utf-8'))
+            data = request.data
             if not data:
                 return JsonResponse({'success': False, 'error': 'Empty data in PATCH request'}, status=400)
             if data.get('category'):
@@ -169,9 +220,9 @@ def handle_playlist_id(request, pk):
 #categories/
 @api_view(['GET', 'POST'])
 def handle_category(request):
-    if request.method == 'POST':
+    if request.method == 'POST' and request.user.groups.filter(name='Admin').exists():
         try:
-            data = json.loads(request.body)
+            data = request.data
             serializer = CategorySerializer(data=request.data)
             serializer.validate(data)
             if serializer.is_valid():
@@ -218,7 +269,7 @@ def handle_category_id(request, pk):
 
     elif request.method == 'PATCH':
         try:
-            data = json.loads(request.body.decode('utf-8'))
+            data = request.data
             if not data:
                 return JsonResponse({'success': False, 'error': 'Empty data in PATCH request'}, status=400)
 
@@ -242,12 +293,15 @@ def handle_playlist_hierarchy(request, pk):
         return JsonResponse({'success': False, 'error': 'Category not found'}, status=400)
     if request.method == 'POST':
         try:
-            data = json.loads(request.body)
-            serializer = PlaylistSerializer(data=data)
-            serializer.validate(data)
+            data = request.data
             category_id = data.get('category')
+            if not category_id:
+                data['category'] = category.pk
             if category_id != pk:
-                return JsonResponse({'success': False, 'error': "Body and URL category id mismatch"}, status=400)
+                data['category'] = category.pk
+
+            serializer = PlaylistSerializer(data=data, context={'request': request})
+            serializer.validate(data)
             if serializer.is_valid():
                 playlist = serializer.save(category_id=pk)
                 return JsonResponse({'success': True, 'playlist': serializer.data}, status=201)
@@ -257,6 +311,7 @@ def handle_playlist_hierarchy(request, pk):
             return JsonResponse({'success': False, 'error': str(e)}, status=400)
         except ValidationError as e:
             return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
     if request.method == 'GET':
         try:
             playlists = Playlist.objects.filter(category__id=pk)
@@ -287,7 +342,7 @@ def handle_playlist_hierarchy_id(request, pk, cid):
 
     elif request.method == 'PATCH':
         try:
-            data = json.loads(request.body.decode('utf-8'))
+            data = request.data
             if not data:
                 return JsonResponse({'success': False, 'error': 'Empty data in PATCH request'}, status=400)
             serializer = PlaylistSerializer(playlist, data=data, partial=True)
@@ -366,7 +421,7 @@ def handle_song_id_basic(request, song):
         return JsonResponse(serializer.data, safe=False, status=200)
     elif request.method == 'PATCH':
         try:
-            data = json.loads(request.body.decode('utf-8'))
+            data = request.data
             if not data:
                 return JsonResponse({'success': False, 'error': 'Empty data in PATCH request'}, status=400)
             serializer = SongSerializer(song, data=data, partial=True)
@@ -396,17 +451,19 @@ def handle_song_basic(cid, request):
 
     elif request.method == 'POST':
         try:
-            data = json.loads(request.body)
-            serializertemp = SongSerializer(data=data)
-            serializertemp.validate(data)
+            data = request.data
             playlists = []
-            if 'playlist' in request.data:
-                if isinstance(request.data.get('playlist'), list):
-                    playlists = list(set(request.data.get('playlist')))
+            if 'playlist' in data:
+                if isinstance(data.get('playlist'), list):
+                    playlists = list(set(data.get('playlist')))
                 else:
                     return JsonResponse({'success': False, 'error': 'Invalid JSON data'}, status=400)
             if int(cid) not in playlists:
                 playlists.append(int(cid))
+
+            invalid_playlists = Playlist.objects.filter(id__in=playlists).exclude(playlist_owner=request.user)
+            if invalid_playlists.exists() and not request.user.groups.filter(name='Admin').exists():
+                return JsonResponse({'success': False, 'error': 'Some playlists do not belong to you.'}, status=400)
 
             data = {
                 'name': request.data.get('name'),
@@ -415,8 +472,7 @@ def handle_song_basic(cid, request):
                 'genre': request.data.get('genre'),
                 'playlist': playlists
             }
-
-            serializer = SongSerializer(data=data)
+            serializer = SongSerializer(data=data, context={'request': request})
             if serializer.is_valid():
                 song = serializer.save()
                 song.playlist.set(playlists)
@@ -429,3 +485,4 @@ def handle_song_basic(cid, request):
             return JsonResponse({'success': False, 'error': str(e)}, status=400)
     else:
         return JsonResponse({'success': False, 'error': 'Method not allowed.'}, status=405)
+

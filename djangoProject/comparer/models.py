@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Category(models.Model):
@@ -14,6 +15,7 @@ class Playlist(models.Model):
     description = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='playlists')
     image = models.ImageField(upload_to='playlists/', null=True, blank=True)
+    playlist_owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='playlists')
 
     def __str__(self):
         return self.name
@@ -27,6 +29,7 @@ class Song(models.Model):
     playlist = models.ManyToManyField('Playlist', related_name='songs')
     artwork = models.ImageField(upload_to='artworks/', null=True, blank=True)
     song_file = models.FileField(upload_to='songs/', null=True, blank=True)
+    song_owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='songs')
 
     def __str__(self):
         return f"{self.name} by {self.artist}"

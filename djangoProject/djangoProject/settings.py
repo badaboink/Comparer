@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
+    'oauth2_provider',
     'comparer'
 ]
 
@@ -49,7 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'comparer.custom_404_middleware.Custom404Middleware',
+    'comparer.customs.custom_404_middleware.Custom404Middleware',
 ]
 
 ROOT_URLCONF = 'djangoProject.urls'
@@ -72,7 +73,15 @@ TEMPLATES = [
 ]
 
 REST_FRAMEWORK = {
-    'EXCEPTION_HANDLER': 'comparer.custom_exception_handler.custom_exception_handler',
+    'EXCEPTION_HANDLER': 'comparer.customs.custom_exception_handler.custom_exception_handler',
+
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+    ),
+
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 }
 
 handler404 = 'comparer.custom_exception_handler.custom_404_view'
@@ -133,3 +142,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+OAUTH2_PROVIDER = {
+    # this is the list of available scopes
+    'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'groups': 'Access to your groups', 'categories':
+        'Access to your categories'}
+}
