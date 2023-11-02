@@ -1,5 +1,6 @@
 import json
 
+from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.db import transaction
 from django.http import JsonResponse, HttpResponse
@@ -12,6 +13,7 @@ from .serializers import CategorySerializer, PlaylistSerializer, SongSerializer,
 from oauth2_provider.contrib.rest_framework import TokenHasScope
 from django.contrib.auth.models import Group
 
+
 from .customs import custom_permissions
 
 
@@ -19,7 +21,7 @@ from .customs import custom_permissions
 # will remover csrf exemption when adding front
 @csrf_exempt
 @transaction.atomic
-def UserRegister(request):
+def user_register(request):
     user = request.user
     if not user.groups.exists() or user.groups.filter(name='Admin').exists():
 
@@ -43,6 +45,44 @@ def UserRegister(request):
 
         return JsonResponse({'message': 'Only POST requests are allowed for user registration'}, status=405)
     return JsonResponse({'message': 'Access denied. You must be an admin or not logged in to register users.'}, status=403)
+
+
+@csrf_exempt
+@transaction.atomic
+def user_login(request):
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            return JsonResponse({'message': 'You are already logged in'}, status=200)
+
+        try:
+            request_data = json.loads(request.body.decode('utf-8'))
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+
+        username = request_data.get('username')
+        password = request_data.get('password')
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return JsonResponse({'message': 'User logged in'}, status=200)
+        else:
+            return JsonResponse({'error': 'Invalid credentials'}, status=401)
+
+    return JsonResponse({'message': 'Only POST requests are allowed for user login'}, status=405)
+
+
+@csrf_exempt
+def user_logout(request):
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            logout(request)
+            return JsonResponse({'message': 'Logout successful'})
+        else:
+            return JsonResponse({'error': 'You are not logged in'}, status=401)
+
+    return JsonResponse({'message': 'Only POST requests are allowed for user logout'}, status=405)
 
 
 #viewsets
@@ -78,10 +118,9 @@ def handle_song(request):
             data = request.data
             playlist_ids = data.get('playlist')
             if playlist_ids:
-                invalid_playlists = Playlist.objects.filter(id__in=playlist_ids).exclude(playlist_owner=request.user)
-
-                if invalid_playlists.exists() and not request.user.groups.filter(name='Admin').exists():
-                    return JsonResponse({'success': False, 'error': 'Some playlists do not belong to you.'}, status=400)
+                error_response = validate_playlists_owner(request, request.data.get('playlists', []))
+                if error_response:
+                    return error_response
 
                 serializer = SongSerializer(data=request.data, context={'request': request})
                 serializer.validate(data)
@@ -123,11 +162,25 @@ def handle_song_id(request, pk):
         return JsonResponse(serializer.data, safe=False, status=200)
 
     elif request.method == 'DELETE':
+        error_response = own_or_admin_song(request)
+        if error_response:
+            return error_response
+        if request.user.username != song.song_owner.username or not request.user.groups.filter(name='Admin').exists():
+            return JsonResponse({'success': False, 'error': 'Song does not belong to you.'}, status=403)
         song.delete()
         return HttpResponse(status=204)
 
     elif request.method == 'PATCH':
         try:
+            error_response = own_or_admin_song(request)
+            playlists_owner_error = validate_playlists_owner(request, request.data.get('playlists', []))
+            if error_response or playlists_owner_error:
+                errors = {}
+                if error_response:
+                    errors.update(error_response)
+                if playlists_owner_error:
+                    errors.update(playlists_owner_error)
+                return JsonResponse(errors, status=400)
             data = json.loads(request.data.decode('utf-8'))
             if not data:
                 return JsonResponse({'success': False, 'error': 'Empty data in PATCH request'}, status=400)
@@ -193,11 +246,17 @@ def handle_playlist_id(request, pk):
         return JsonResponse(serializer.data, safe=False, status=200)
 
     elif request.method == 'DELETE':
+        error_response = own_or_admin_playlist(request)
+        if error_response:
+            return error_response
         playlist.delete()
         return HttpResponse(status=204)
 
     elif request.method == 'PATCH':
         try:
+            error_response = own_or_admin_playlist(request)
+            if error_response:
+                return error_response
             data = request.data
             if not data:
                 return JsonResponse({'success': False, 'error': 'Empty data in PATCH request'}, status=400)
@@ -220,8 +279,11 @@ def handle_playlist_id(request, pk):
 #categories/
 @api_view(['GET', 'POST'])
 def handle_category(request):
-    if request.method == 'POST' and request.user.groups.filter(name='Admin').exists():
+    if request.method == 'POST':
         try:
+            error_response = require_admin_access(request)
+            if error_response:
+                return error_response
             data = request.data
             serializer = CategorySerializer(data=request.data)
             serializer.validate(data)
@@ -264,11 +326,17 @@ def handle_category_id(request, pk):
         return JsonResponse(serializer.data, safe=False, status=200)
 
     elif request.method == 'DELETE':
+        error_response = require_admin_access(request)
+        if error_response:
+            return error_response
         category.delete()
         return HttpResponse(status=204)
 
     elif request.method == 'PATCH':
         try:
+            error_response = require_admin_access(request)
+            if error_response:
+                return error_response
             data = request.data
             if not data:
                 return JsonResponse({'success': False, 'error': 'Empty data in PATCH request'}, status=400)
@@ -323,6 +391,35 @@ def handle_playlist_hierarchy(request, pk):
         return JsonResponse({'error': 'Method not allowed.'}, status=405)
 
 
+def require_admin_access(request):
+    if not request.user.groups.filter(name='Admin').exists():
+        return JsonResponse({'success': False, 'error': 'You must be an admin to access this method.'}, status=403)
+    return None
+
+
+def own_or_admin_playlist(request, playlist):
+    if request.user.username != playlist.playlist_owner.username or not request.user.groups.filter(
+            name='Admin').exists():
+        return JsonResponse({'success': False, 'error': 'You must be an admin to access this method.'}, status=403)
+    return None
+
+
+def own_or_admin_song(request, song):
+    if request.user.username != song.song_owner.username or not request.user.groups.filter(
+            name='Admin').exists():
+        return JsonResponse({'success': False, 'error': 'You must be an admin to access this method.'}, status=403)
+    return None
+
+
+def validate_playlists_owner(request, playlists):
+    username = request.user.username
+    for playlist_data in playlists:
+        if 'playlist_owner' in playlist_data and playlist_data['playlist_owner'] != username:
+            return JsonResponse({'success': False, 'error': 'Invalid playlist_owner for one or more playlists.'},
+                                status=403)
+    return None
+
+
 @csrf_exempt
 @api_view(['GET', 'PATCH', 'DELETE'])
 def handle_playlist_hierarchy_id(request, pk, cid):
@@ -342,6 +439,9 @@ def handle_playlist_hierarchy_id(request, pk, cid):
 
     elif request.method == 'PATCH':
         try:
+            error_response = own_or_admin_playlist(request, playlist)
+            if error_response:
+                return error_response
             data = request.data
             if not data:
                 return JsonResponse({'success': False, 'error': 'Empty data in PATCH request'}, status=400)
@@ -353,6 +453,9 @@ def handle_playlist_hierarchy_id(request, pk, cid):
         except json.JSONDecodeError:
             return JsonResponse({'success': False, 'error': 'Invalid JSON data'}, status=400)
     elif request.method == 'DELETE':
+        error_response = own_or_admin_playlist(request, playlist)
+        if error_response:
+            return error_response
         playlist.delete()
         return HttpResponse(status=204)
     else:
@@ -421,10 +524,20 @@ def handle_song_id_basic(request, song):
         return JsonResponse(serializer.data, safe=False, status=200)
     elif request.method == 'PATCH':
         try:
+            error_response = own_or_admin_song(request, song)
+            playlists_owner_error = validate_playlists_owner(request, request.data.get('playlists', []))
+            if error_response or playlists_owner_error:
+                errors = {}
+                if error_response:
+                    errors.update(error_response)
+                if playlists_owner_error:
+                    errors.update(playlists_owner_error)
+                return JsonResponse(errors, status=403)
             data = request.data
             if not data:
                 return JsonResponse({'success': False, 'error': 'Empty data in PATCH request'}, status=400)
             serializer = SongSerializer(song, data=data, partial=True)
+
             if serializer.is_valid():
                 serializer.save()
                 return JsonResponse(serializer.data, status=200)
@@ -432,6 +545,9 @@ def handle_song_id_basic(request, song):
         except json.JSONDecodeError:
             return JsonResponse({'success': False, 'error': 'Invalid JSON data'}, status=400)
     elif request.method == 'DELETE':
+        error_response = own_or_admin_song(request, song)
+        if error_response:
+            return error_response
         song.delete()
         return HttpResponse(status=204)
     else:
@@ -460,10 +576,9 @@ def handle_song_basic(cid, request):
                     return JsonResponse({'success': False, 'error': 'Invalid JSON data'}, status=400)
             if int(cid) not in playlists:
                 playlists.append(int(cid))
-
-            invalid_playlists = Playlist.objects.filter(id__in=playlists).exclude(playlist_owner=request.user)
-            if invalid_playlists.exists() and not request.user.groups.filter(name='Admin').exists():
-                return JsonResponse({'success': False, 'error': 'Some playlists do not belong to you.'}, status=400)
+            error_response = validate_playlists_owner(request, playlists)
+            if error_response:
+                return error_response
 
             data = {
                 'name': request.data.get('name'),

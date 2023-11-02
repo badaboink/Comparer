@@ -146,5 +146,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 OAUTH2_PROVIDER = {
     # this is the list of available scopes
     'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'groups': 'Access to your groups', 'categories':
-        'Access to your categories'}
+        'Access to your categories'},
+    'ACCESS_TOKEN_EXPIRE_SECONDS': 2592000
 }

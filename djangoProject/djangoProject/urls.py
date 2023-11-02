@@ -27,7 +27,9 @@ urlpatterns = [
     re_path(r'playlists/(?P<cid>\d+)/songs/(?P<tid>\d+)/?$', views.handle_song_by_playlist_id,
          name='handle_song_id'),
 
-    path('register/', views.UserRegister, name='user_register'),
+    re_path(r'register/?$', views.user_register, name='user_register'),
+    re_path(r'login/?$', views.user_login, name='user_login'),
+    re_path(r'logout/?$', views.user_logout, name='user_logout'),
 
-    path('groups/', views.GroupList.as_view()),
+    re_path(r'groups/?$', views.GroupList.as_view()),
 ]
