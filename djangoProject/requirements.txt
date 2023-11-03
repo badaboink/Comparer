@@ -3,3 +3,4 @@ mysqlclient
 djangorestframework
 django-cors-headers
 django-oauth-toolkit
+Pillow
