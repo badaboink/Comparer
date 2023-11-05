@@ -162,7 +162,7 @@ def handle_song_id(request, pk):
         return JsonResponse(serializer.data, safe=False, status=200)
 
     elif request.method == 'DELETE':
-        error_response = own_or_admin_song(request)
+        error_response = own_or_admin_song(request, song)
         if error_response:
             return error_response
         if request.user.username != song.song_owner.username or not request.user.groups.filter(name='Admin').exists():
@@ -172,7 +172,7 @@ def handle_song_id(request, pk):
 
     elif request.method == 'PATCH':
         try:
-            error_response = own_or_admin_song(request)
+            error_response = own_or_admin_song(request, song)
             playlists_owner_error = validate_playlists_owner(request, request.data.get('playlists', []))
             if error_response or playlists_owner_error:
                 errors = {}
@@ -246,7 +246,7 @@ def handle_playlist_id(request, pk):
         return JsonResponse(serializer.data, safe=False, status=200)
 
     elif request.method == 'DELETE':
-        error_response = own_or_admin_playlist(request)
+        error_response = own_or_admin_playlist(request, playlist)
         if error_response:
             return error_response
         playlist.delete()
@@ -254,7 +254,7 @@ def handle_playlist_id(request, pk):
 
     elif request.method == 'PATCH':
         try:
-            error_response = own_or_admin_playlist(request)
+            error_response = own_or_admin_playlist(request, playlist)
             if error_response:
                 return error_response
             data = request.data
@@ -413,8 +413,9 @@ def own_or_admin_song(request, song):
 
 def validate_playlists_owner(request, playlists):
     username = request.user.username
-    for playlist_data in playlists:
-        if 'playlist_owner' in playlist_data and playlist_data['playlist_owner'] != username:
+    for playlist_id in playlists:
+        playlist_data = Playlist.objects.filter(pk=playlist_id)
+        if playlist_data.get().playlist_owner.username != username:
             return JsonResponse({'success': False, 'error': 'Invalid playlist_owner for one or more playlists.'},
                                 status=403)
     return None
