@@ -5,3 +5,4 @@ django-cors-headers
 django-oauth-toolkit
 Pillow
 mssql-django
+gunicorn

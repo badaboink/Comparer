@@ -1164,23 +1164,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/categories/11/playlists/1/songs/1",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"categories",
-								"11",
-								"playlists",
-								"1",
-								"songs",
-								"1"
-							]
+							"raw": ""
 						}
 					},
 					"response": [
@@ -1435,7 +1419,22 @@
 					"name": "New Request",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/playlists/id",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"playlists",
+								"id"
+							]
+						}
 					},
 					"response": [
 						{
@@ -1575,7 +1574,33 @@
 							],
 							"cookie": [],
 							"body": "{\n    \"id\": 1,\n    \"name\": \"Indie Dreams Unplugged\",\n    \"description\": \"Acoustic renditions of indie favorites for a mellow and introspective listening experience.\",\n    \"image\": \"/playlists/tumblr_1c0c66dc35267ccc83b59b414e94a5d0_713ff0ff_2048.jpg\",\n    \"category\": 11\n}"
-						},
+						}
+					]
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/categories/id/playlists/id",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"categories",
+								"id",
+								"playlists",
+								"id"
+							]
+						}
+					},
+					"response": [
 						{
 							"name": "New Request",
 							"originalRequest": {
@@ -1811,7 +1836,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n\t\"name\": \"Workout routine\",\r\n    \"description\": \"For working out\",\r\n    \"category\": 4\r\n}",
+									"raw": "{\r\n\t\"name\": \"Workout routine\",\r\n    \"description\": \"For working out\",\r\n    \"category\": 1\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2210,7 +2235,22 @@
 					"name": "New Request",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/categories/id",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"categories",
+								"id"
+							]
+						}
 					},
 					"response": [
 						{
@@ -2367,7 +2407,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/categories",
+							"raw": "http://127.0.0.1:8000/categories/id",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -2377,7 +2417,8 @@
 							],
 							"port": "8000",
 							"path": [
-								"categories"
+								"categories",
+								"id"
 							]
 						}
 					},
@@ -2476,7 +2517,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/categories/15",
+							"raw": "http://127.0.0.1:8000/categories/id",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -2487,7 +2528,7 @@
 							"port": "8000",
 							"path": [
 								"categories",
-								"15"
+								"id"
 							]
 						}
 					},
@@ -2576,7 +2617,22 @@
 					"name": "New Request",
 					"request": {
 						"method": "DELETE",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/categories/id",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"categories",
+								"id"
+							]
+						}
 					},
 					"response": [
 						{
@@ -2649,6 +2705,1095 @@
 							"body": null
 						}
 					]
+				}
+			]
+		},
+		{
+			"name": "oauth",
+			"item": [
+				{
+					"name": "deny access to normal users",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "clientSecret",
+									"value": "IS4lmzVfBxfMG36ZSoyTPQ1XVA5SWnN0kNtSMOKo9kkAYfObbY7oyzQwjme3tGHbXywXCx1VNrH3LhLToVkZcnfsAuWV6aQvrHUebeuulb3NbqpNH6y4QFkNbLEa5ZXQ",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "z0S2H9qXK7wQo16N8fSJif2q7YBMpc00GBHoD1sx",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "alioalio",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "Egle",
+									"type": "string"
+								},
+								{
+									"key": "scope",
+									"value": "read write categories groups",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "http://127.0.0.1:8000/o/token/",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "password_credentials",
+									"type": "string"
+								},
+								{
+									"key": "refreshRequestParams",
+									"value": [],
+									"type": "any"
+								},
+								{
+									"key": "tokenRequestParams",
+									"value": [],
+									"type": "any"
+								},
+								{
+									"key": "authRequestParams",
+									"value": [],
+									"type": "any"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "queryParams",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/groups/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"groups",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "token gavimas",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "password",
+									"value": "alioalio",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "Egle",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "IS4lmzVfBxfMG36ZSoyTPQ1XVA5SWnN0kNtSMOKo9kkAYfObbY7oyzQwjme3tGHbXywXCx1VNrH3LhLToVkZcnfsAuWV6aQvrHUebeuulb3NbqpNH6y4QFkNbLEa5ZXQ",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "z0S2H9qXK7wQo16N8fSJif2q7YBMpc00GBHoD1sx",
+									"type": "string"
+								},
+								{
+									"key": "scope",
+									"value": "read write categories groups",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "http://127.0.0.1:8000/o/token/",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "password_credentials",
+									"type": "string"
+								},
+								{
+									"key": "refreshRequestParams",
+									"value": [],
+									"type": "any"
+								},
+								{
+									"key": "tokenRequestParams",
+									"value": [],
+									"type": "any"
+								},
+								{
+									"key": "authRequestParams",
+									"value": [],
+									"type": "any"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "queryParams",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "grant_type",
+								"value": "password",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "username",
+								"value": "Egle",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "password",
+								"value": "alioalio",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "client_id",
+								"value": "z0S2H9qXK7wQo16N8fSJif2q7YBMpc00GBHoD1sx",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "client_secret",
+								"value": "IS4lmzVfBxfMG36ZSoyTPQ1XVA5SWnN0kNtSMOKo9kkAYfObbY7oyzQwjme3tGHbXywXCx1VNrH3LhLToVkZcnfsAuWV6aQvrHUebeuulb3NbqpNH6y4QFkNbLEa5ZXQ",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "Egle",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "alioalio",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "z0S2H9qXK7wQo16N8fSJif2q7YBMpc00GBHoD1sx",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "IS4lmzVfBxfMG36ZSoyTPQ1XVA5SWnN0kNtSMOKo9kkAYfObbY7oyzQwjme3tGHbXywXCx1VNrH3LhLToVkZcnfsAuWV6aQvrHUebeuulb3NbqpNH6y4QFkNbLEa5ZXQ",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/o/token/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"o",
+								"token",
+								""
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "z0S2H9qXK7wQo16N8fSJif2q7YBMpc00GBHoD1sx",
+									"disabled": true
+								},
+								{
+									"key": "client_secret",
+									"value": "IS4lmzVfBxfMG36ZSoyTPQ1XVA5SWnN0kNtSMOKo9kkAYfObbY7oyzQwjme3tGHbXywXCx1VNrH3LhLToVkZcnfsAuWV6aQvrHUebeuulb3NbqpNH6y4QFkNbLEa5ZXQ",
+									"disabled": true
+								},
+								{
+									"key": "grant_type",
+									"value": "password",
+									"disabled": true
+								},
+								{
+									"key": "username",
+									"value": "Egle",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "kazkasegle5",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "token gavimas",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "grant_type",
+										"value": "password",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "username",
+										"value": "Egle",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "password",
+										"value": "alioalio",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "client_id",
+										"value": "z0S2H9qXK7wQo16N8fSJif2q7YBMpc00GBHoD1sx",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "client_secret",
+										"value": "IS4lmzVfBxfMG36ZSoyTPQ1XVA5SWnN0kNtSMOKo9kkAYfObbY7oyzQwjme3tGHbXywXCx1VNrH3LhLToVkZcnfsAuWV6aQvrHUebeuulb3NbqpNH6y4QFkNbLEa5ZXQ",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "grant_type",
+											"value": "password",
+											"type": "text"
+										},
+										{
+											"key": "username",
+											"value": "Egle",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "alioalio",
+											"type": "text"
+										},
+										{
+											"key": "client_id",
+											"value": "z0S2H9qXK7wQo16N8fSJif2q7YBMpc00GBHoD1sx",
+											"type": "text"
+										},
+										{
+											"key": "client_secret",
+											"value": "IS4lmzVfBxfMG36ZSoyTPQ1XVA5SWnN0kNtSMOKo9kkAYfObbY7oyzQwjme3tGHbXywXCx1VNrH3LhLToVkZcnfsAuWV6aQvrHUebeuulb3NbqpNH6y4QFkNbLEa5ZXQ",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/o/token/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"o",
+										"token",
+										""
+									],
+									"query": [
+										{
+											"key": "client_id",
+											"value": "z0S2H9qXK7wQo16N8fSJif2q7YBMpc00GBHoD1sx",
+											"disabled": true
+										},
+										{
+											"key": "client_secret",
+											"value": "IS4lmzVfBxfMG36ZSoyTPQ1XVA5SWnN0kNtSMOKo9kkAYfObbY7oyzQwjme3tGHbXywXCx1VNrH3LhLToVkZcnfsAuWV6aQvrHUebeuulb3NbqpNH6y4QFkNbLEa5ZXQ",
+											"disabled": true
+										},
+										{
+											"key": "grant_type",
+											"value": "password",
+											"disabled": true
+										},
+										{
+											"key": "username",
+											"value": "Egle",
+											"disabled": true
+										},
+										{
+											"key": "password",
+											"value": "kazkasegle5",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 02 Nov 2023 18:10:59 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.10.13"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-store"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "189"
+								},
+								{
+									"key": "Vary",
+									"value": "origin"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								},
+								{
+									"key": "Cross-Origin-Opener-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"access_token\": \"fv1uiW0ZC5CTemQwrFnExd4uIcUfqa\",\n    \"expires_in\": 2592000,\n    \"token_type\": \"Bearer\",\n    \"scope\": \"read write groups categories\",\n    \"refresh_token\": \"mhxr8QcJx5SqQsVEoqPvMgcTaRUBw0\"\n}"
+						},
+						{
+							"name": "token gavimas",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "grant_type",
+										"value": "password",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "username",
+										"value": "Egle",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "password",
+										"value": "alioalio",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "client_id",
+										"value": "z0S2H9qXK7wQo16N8fSJif2q7YBMpc00GBHoD1sx",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "client_secret",
+										"value": "IS4lmzVfBxfMG36ZSoyTPQ1XVA5SWnN0kNtSMOKo9kkAYfObbY7oyzQwjme3tGHbXywXCx1VNrH3LhLToVkZcnfsAuWV6aQvrHUebeuulb3NbqpNH6y4QFkNbLEa5ZXQ",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "grant_type",
+											"value": "password",
+											"type": "text"
+										},
+										{
+											"key": "username",
+											"value": "eglej",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "kazkasegle5",
+											"type": "text"
+										},
+										{
+											"key": "client_id",
+											"value": "z0S2H9qXK7wQo16N8fSJif2q7YBMpc00GBHoD1sx",
+											"type": "text"
+										},
+										{
+											"key": "client_secret",
+											"value": "IS4lmzVfBxfMG36ZSoyTPQ1XVA5SWnN0kNtSMOKo9kkAYfObbY7oyzQwjme3tGHbXywXCx1VNrH3LhLToVkZcnfsAuWV6aQvrHUebeuulb3NbqpNH6y4QFkNbLEa5ZXQ",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/o/token/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"o",
+										"token",
+										""
+									],
+									"query": [
+										{
+											"key": "client_id",
+											"value": "z0S2H9qXK7wQo16N8fSJif2q7YBMpc00GBHoD1sx",
+											"disabled": true
+										},
+										{
+											"key": "client_secret",
+											"value": "IS4lmzVfBxfMG36ZSoyTPQ1XVA5SWnN0kNtSMOKo9kkAYfObbY7oyzQwjme3tGHbXywXCx1VNrH3LhLToVkZcnfsAuWV6aQvrHUebeuulb3NbqpNH6y4QFkNbLEa5ZXQ",
+											"disabled": true
+										},
+										{
+											"key": "grant_type",
+											"value": "password",
+											"disabled": true
+										},
+										{
+											"key": "username",
+											"value": "Egle",
+											"disabled": true
+										},
+										{
+											"key": "password",
+											"value": "kazkasegle5",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 02 Nov 2023 18:48:40 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.10.13"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-store"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "189"
+								},
+								{
+									"key": "Vary",
+									"value": "origin"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								},
+								{
+									"key": "Cross-Origin-Opener-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"access_token\": \"Aq8Z9m2XxsGGo4mlUIrp2pMos54Y90\",\n    \"expires_in\": 2592000,\n    \"token_type\": \"Bearer\",\n    \"scope\": \"read write groups categories\",\n    \"refresh_token\": \"I0BWa6V49Nc0SSWe32uW7gYTF3c4FB\"\n}"
+						},
+						{
+							"name": "token gavimas",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "grant_type",
+										"value": "password",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "username",
+										"value": "Egle",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "password",
+										"value": "alioalio",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "client_id",
+										"value": "z0S2H9qXK7wQo16N8fSJif2q7YBMpc00GBHoD1sx",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "client_secret",
+										"value": "IS4lmzVfBxfMG36ZSoyTPQ1XVA5SWnN0kNtSMOKo9kkAYfObbY7oyzQwjme3tGHbXywXCx1VNrH3LhLToVkZcnfsAuWV6aQvrHUebeuulb3NbqpNH6y4QFkNbLEa5ZXQ",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "grant_type",
+											"value": "password",
+											"type": "text"
+										},
+										{
+											"key": "username",
+											"value": "eglej",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "kazkasegle5",
+											"type": "text"
+										},
+										{
+											"key": "client_id",
+											"value": "baCSo9B5nCAddxDq3n5qrBnFpMGWUUsnFpYYKCn0",
+											"type": "text"
+										},
+										{
+											"key": "client_secret",
+											"value": "6O5IPIJohLtZxDvECp3jdZDeqp5mNnq1wR5qRMfX2piQXVxLCBIc02lP470OvqBZt6hymRwWz6TYgpjtIlHaMnRFEAJv1YW54C2SnTw6UVAWB2NaElG0tgJbFwRDDSLk",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/o/token/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"o",
+										"token",
+										""
+									],
+									"query": [
+										{
+											"key": "client_id",
+											"value": "z0S2H9qXK7wQo16N8fSJif2q7YBMpc00GBHoD1sx",
+											"disabled": true
+										},
+										{
+											"key": "client_secret",
+											"value": "IS4lmzVfBxfMG36ZSoyTPQ1XVA5SWnN0kNtSMOKo9kkAYfObbY7oyzQwjme3tGHbXywXCx1VNrH3LhLToVkZcnfsAuWV6aQvrHUebeuulb3NbqpNH6y4QFkNbLEa5ZXQ",
+											"disabled": true
+										},
+										{
+											"key": "grant_type",
+											"value": "password",
+											"disabled": true
+										},
+										{
+											"key": "username",
+											"value": "Egle",
+											"disabled": true
+										},
+										{
+											"key": "password",
+											"value": "kazkasegle5",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sun, 05 Nov 2023 16:44:04 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.10.13"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-store"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "189"
+								},
+								{
+									"key": "Vary",
+									"value": "origin"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								},
+								{
+									"key": "Cross-Origin-Opener-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"access_token\": \"lxMO2JN6o0ZlsQEosfAqth6JFgI7Lx\",\n    \"expires_in\": 2592000,\n    \"token_type\": \"Bearer\",\n    \"scope\": \"read write groups categories\",\n    \"refresh_token\": \"YF8hAj6TdZzAIDHxLDz2S81OwB07wF\"\n}"
+						},
+						{
+							"name": "token gavimas",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "grant_type",
+										"value": "password",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "username",
+										"value": "Egle",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "password",
+										"value": "alioalio",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "client_id",
+										"value": "z0S2H9qXK7wQo16N8fSJif2q7YBMpc00GBHoD1sx",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "client_secret",
+										"value": "IS4lmzVfBxfMG36ZSoyTPQ1XVA5SWnN0kNtSMOKo9kkAYfObbY7oyzQwjme3tGHbXywXCx1VNrH3LhLToVkZcnfsAuWV6aQvrHUebeuulb3NbqpNH6y4QFkNbLEa5ZXQ",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "grant_type",
+											"value": "password",
+											"type": "text"
+										},
+										{
+											"key": "username",
+											"value": "username",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "slaptazodis",
+											"type": "text"
+										},
+										{
+											"key": "client_id",
+											"value": "baCSo9B5nCAddxDq3n5qrBnFpMGWUUsnFpYYKCn0",
+											"type": "text"
+										},
+										{
+											"key": "client_secret",
+											"value": "6O5IPIJohLtZxDvECp3jdZDeqp5mNnq1wR5qRMfX2piQXVxLCBIc02lP470OvqBZt6hymRwWz6TYgpjtIlHaMnRFEAJv1YW54C2SnTw6UVAWB2NaElG0tgJbFwRDDSLk",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/o/token/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"o",
+										"token",
+										""
+									],
+									"query": [
+										{
+											"key": "client_id",
+											"value": "z0S2H9qXK7wQo16N8fSJif2q7YBMpc00GBHoD1sx",
+											"disabled": true
+										},
+										{
+											"key": "client_secret",
+											"value": "IS4lmzVfBxfMG36ZSoyTPQ1XVA5SWnN0kNtSMOKo9kkAYfObbY7oyzQwjme3tGHbXywXCx1VNrH3LhLToVkZcnfsAuWV6aQvrHUebeuulb3NbqpNH6y4QFkNbLEa5ZXQ",
+											"disabled": true
+										},
+										{
+											"key": "grant_type",
+											"value": "password",
+											"disabled": true
+										},
+										{
+											"key": "username",
+											"value": "Egle",
+											"disabled": true
+										},
+										{
+											"key": "password",
+											"value": "kazkasegle5",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sun, 05 Nov 2023 22:49:57 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.10.13"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-store"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "189"
+								},
+								{
+									"key": "Vary",
+									"value": "origin"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								},
+								{
+									"key": "Cross-Origin-Opener-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"access_token\": \"jnYjRxTuWaQl85aY1BzoVID1GrWzpz\",\n    \"expires_in\": 2592000,\n    \"token_type\": \"Bearer\",\n    \"scope\": \"read write groups categories\",\n    \"refresh_token\": \"eLwVYahhCD9XSIWvgGiaXIMpt7TeF9\"\n}"
+						}
+					]
+				},
+				{
+					"name": "admin access to groups Copy",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "clientSecret",
+									"value": "IS4lmzVfBxfMG36ZSoyTPQ1XVA5SWnN0kNtSMOKo9kkAYfObbY7oyzQwjme3tGHbXywXCx1VNrH3LhLToVkZcnfsAuWV6aQvrHUebeuulb3NbqpNH6y4QFkNbLEa5ZXQ",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "z0S2H9qXK7wQo16N8fSJif2q7YBMpc00GBHoD1sx",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "kazkasegle5",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "eglej",
+									"type": "string"
+								},
+								{
+									"key": "scope",
+									"value": "read write categories groups",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "http://127.0.0.1:8000/o/token/",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "password_credentials",
+									"type": "string"
+								},
+								{
+									"key": "refreshRequestParams",
+									"value": [],
+									"type": "any"
+								},
+								{
+									"key": "tokenRequestParams",
+									"value": [],
+									"type": "any"
+								},
+								{
+									"key": "authRequestParams",
+									"value": [],
+									"type": "any"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "queryParams",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"name\": \"Brazil 66\",\r\n    \"artist\": \"Alison's Halo\",\r\n    \"year\": 1998,\r\n    \"genre\": \"Dreampop\",\r\n    \"playlist\": [\"1\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/songs/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"songs",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "request groups",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "bearer lxMO2JN6o0ZlsQEosfAqth6JFgI7Lx",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "bearer jnYjRxTuWaQl85aY1BzoVID1GrWzpz",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://comparer.azurewebsites.net/groups/",
+							"protocol": "https",
+							"host": [
+								"comparer",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"groups",
+								""
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}
