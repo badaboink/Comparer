@@ -2,7 +2,9 @@ Django~=4.2.5
 mysqlclient
 djangorestframework
 django-cors-headers
-django-oauth-toolkit
 Pillow
 mssql-django
 gunicorn
+PyJWT==2.8.0
+pytz==2023.3.post1
+djangorestframework-simplejwt==5.3.0

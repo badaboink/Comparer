@@ -41,4 +41,4 @@ Backend
 * python manage.py migrate
 * python manage.py createsuperuser 
 * python manage.py runserver
-* in http://127.0.0.1:8000/o/applications/ create a new application and save clientid and client secret, client type is confidential and authorization is password (Resource owner password-based)
+* add to auth_user_groups that 1 user is of 1 group

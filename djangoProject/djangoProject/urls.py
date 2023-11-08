@@ -1,12 +1,11 @@
 from django.contrib import admin
-from django.urls import path, include, re_path
-from rest_framework import routers
+from django.urls import path, re_path
 
 from comparer import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+
     re_path(r'^songs/?$', views.handle_song, name='handle_song'),
     re_path(r'^songs/(?P<pk>\d+)/?$', views.handle_song_id, name='handle_song_id'),
 
@@ -30,6 +29,4 @@ urlpatterns = [
     re_path(r'register/?$', views.user_register, name='user_register'),
     re_path(r'login/?$', views.user_login, name='user_login'),
     re_path(r'logout/?$', views.user_logout, name='user_logout'),
-
-    re_path(r'groups/?$', views.GroupList.as_view()),
 ]
