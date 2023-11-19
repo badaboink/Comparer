@@ -29,4 +29,5 @@ urlpatterns = [
     re_path(r'register/?$', views.user_register, name='user_register'),
     re_path(r'login/?$', views.user_login, name='user_login'),
     re_path(r'logout/?$', views.user_logout, name='user_logout'),
+    re_path(r'check_status/?$', views.check_login_status, name='check_status'),
 ]

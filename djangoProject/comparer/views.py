@@ -1,38 +1,36 @@
 import json
 from datetime import timedelta, datetime
 
+import jwt
 from django.conf import settings
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import Group
 from django.db import transaction
 from django.http import JsonResponse, HttpResponse
-from django.views.decorators.csrf import csrf_exempt
-import jwt
 from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import ValidationError
+
 from .models import Category, Playlist, Song
 from .serializers import CategorySerializer, PlaylistSerializer, SongSerializer
-from django.contrib.auth.models import Group
 
 
 # register
-# will remover csrf exemption when adding front
-@csrf_exempt
 @transaction.atomic
 def user_register(request):
     user = request.user
     if not user.groups.exists() or user.groups.filter(name='Admin').exists():
-
         if request.method == 'POST':
             try:
                 request_data = json.loads(request.body.decode('utf-8'))
             except json.JSONDecodeError:
-                return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+                return JsonResponse({'success': False, 'error': 'Invalid JSON data'}, status=400)
 
             form = UserCreationForm(request_data)
             if form.is_valid():
                 user = form.save()
+                user.email = request_data.get('email')
 
                 group, created = Group.objects.get_or_create(name='Normal')
                 user.groups.add(group)
@@ -47,36 +45,42 @@ def user_register(request):
                     'exp': expiration_time
                 }
                 token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
-
-                return JsonResponse({'success': True, 'user': user.username, 'token': token, 'group': user_role}, status=200)
+                login(request, user)
+                return JsonResponse({'success': True, 'token': token}, status=200)
 
             errors = dict(form.errors)
-            return JsonResponse({'errors': errors}, status=400)
+            return JsonResponse({'success': False, 'error': errors}, status=400)
 
-        return JsonResponse({'message': 'Only POST requests are allowed for user registration'}, status=405)
-    return JsonResponse({'message': 'Access denied. You must be an admin or not logged in to register users.'}, status=403)
+        return JsonResponse({'success': False, 'error': 'Only POST requests are allowed for user registration'}, status=405)
+    return JsonResponse({'success': False, 'error': 'Access denied. You must be an admin or not logged in to register users.'}, status=403)
 
 
-@csrf_exempt
 @transaction.atomic
 def user_login(request):
     if request.method == 'POST':
         if request.user.is_authenticated:
-            return JsonResponse({'message': 'You are already logged in'}, status=200)
+            return JsonResponse({'success': False, 'error': 'You are already logged in'}, status=400)
         try:
             request_data = json.loads(request.body.decode('utf-8'))
         except json.JSONDecodeError:
-            return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+            return JsonResponse({'success': False, 'error': 'Invalid JSON data'}, status=400)
 
         username = request_data.get('username')
         password = request_data.get('password')
+        checked = request_data.get('checked')
+
+        if not username or not password:
+            return JsonResponse({'success': False, 'error': 'Username and password are required'}, status=400)
 
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
             user_group = user.groups.first()
             user_role = user_group.name if user_group else None
-            expiration_time = datetime.utcnow() + timedelta(days=30)
+            if checked:
+                expiration_time = datetime.utcnow() + timedelta(days=30)
+            else:
+                expiration_time = datetime.utcnow() + timedelta(days=1)
             payload = {
                 'username': user.username,
                 'role': user_role,
@@ -86,21 +90,27 @@ def user_login(request):
             login(request, user)
             return JsonResponse({'success': True, 'token': token}, status=200)
         else:
-            return JsonResponse({'error': 'Invalid credentials'}, status=401)
+            return JsonResponse({'success': False, 'error': 'Invalid credentials'}, status=401)
 
-    return JsonResponse({'message': 'Only POST requests are allowed for user login'}, status=405)
+    return JsonResponse({'success': False, 'error': 'Only POST requests are allowed for user login'}, status=405)
 
 
-@csrf_exempt
 def user_logout(request):
     if request.method == 'POST':
         if request.user.is_authenticated:
             logout(request)
-            return JsonResponse({'message': 'Logout successful'})
+            return JsonResponse({'success': False, 'success': 'Logout successful'}, status=200)
         else:
-            return JsonResponse({'error': 'You are not logged in'}, status=401)
+            return JsonResponse({'success': False, 'error': 'You are not logged in'}, status=401)
 
-    return JsonResponse({'message': 'Only POST requests are allowed for user logout'}, status=405)
+    return JsonResponse({'success': False, 'error': 'Only POST requests are allowed for user logout'}, status=405)
+
+
+def check_login_status(request):
+    if request.user.is_authenticated:
+        return JsonResponse({'isLoggedIn': True})
+    else:
+        return JsonResponse({'isLoggedIn': False})
 
 
 #viewsets
@@ -439,7 +449,7 @@ def handle_playlist_hierarchy(request, pk):
         except json.JSONDecodeError:
             return JsonResponse({'success': False, 'error': 'Invalid JSON data'}, status=400)
     else:
-        return JsonResponse({'error': 'Method not allowed.'}, status=405)
+        return JsonResponse({'success': False, 'error': 'Method not allowed.'}, status=405)
 
 
 def require_admin_access(role):
@@ -463,7 +473,6 @@ def validate_playlists_owner(playlists, username):
     return None
 
 
-@csrf_exempt
 @api_view(['GET', 'PATCH', 'DELETE'])
 def handle_playlist_hierarchy_id(request, pk, cid):
     response_content = check_jwt_token(request)
@@ -505,7 +514,7 @@ def handle_playlist_hierarchy_id(request, pk, cid):
         playlist.delete()
         return HttpResponse(status=204)
     else:
-        return JsonResponse({'error': 'Method not allowed.'}, status=405)
+        return JsonResponse({'success': False, 'error': 'Method not allowed.'}, status=405)
 
 
 #categories/(?P<pk>\d+)/playlists/(?P<cid>\d+)/songs/
@@ -524,7 +533,6 @@ def handle_song_hierarchy(request, pk, cid):
     return handle_song_basic(cid, request)
 
 
-@csrf_exempt
 @api_view(['GET', 'PATCH', 'DELETE'])
 def handle_song_hierarchy_id(request, pk, cid, tid):
     try:
@@ -552,7 +560,6 @@ def handle_song_by_playlist(request, cid):
     return handle_song_basic(cid, request)
 
 
-@csrf_exempt
 @api_view(['GET', 'PATCH', 'DELETE'])
 def handle_song_by_playlist_id(request, cid, tid):
     response_content = check_jwt_token(request)
