@@ -1,5 +1,3 @@
-import { useNavigate } from 'react-router-dom';
-
 // material-ui
 import { useTheme, styled } from '@mui/material/styles';
 import { Button, Card, CardContent, CardMedia, Grid, Typography } from '@mui/material';
@@ -7,6 +5,7 @@ import { Button, Card, CardContent, CardMedia, Grid, Typography } from '@mui/mat
 // project imports
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import { gridSpacing } from 'store/constant';
+import {HOMEPAGE} from '../../../apiUrls';
 
 // assets
 import HomeTwoToneIcon from '@mui/icons-material/HomeTwoTone';
@@ -65,7 +64,6 @@ const CardMediaPurple = styled('img')({
 
 const ErrorPage = () => {
     const theme = useTheme();
-    const navigate = useNavigate();
 
     return (
         <ErrorCard>
@@ -104,7 +102,7 @@ const ErrorPage = () => {
                                             // component={Link}
                                             // to='/'
                                             onClick={() => {
-                                                navigate(-1);
+                                                window.location.href = HOMEPAGE;
                                             }}
                                         >
                                             <HomeTwoToneIcon sx={{ fontSize: '1.3rem', mr: 0.75 }} /> Home

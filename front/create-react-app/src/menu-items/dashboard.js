@@ -1,8 +1,8 @@
 // assets
-import { IconDashboard } from '@tabler/icons';
+import { IconCategory } from '@tabler/icons';
 
 // constant
-const icons = { IconDashboard };
+const icons = { IconCategory };
 
 // ==============================|| DASHBOARD MENU ITEMS ||============================== //
 
@@ -16,7 +16,7 @@ const dashboard = {
       title: 'Main page',
       type: 'item',
       url: '/dashboard',
-      icon: icons.IconDashboard,
+      icon: icons.IconCategory,
       breadcrumbs: false
     }
   ]

@@ -16,41 +16,41 @@ import {
   Paper,
   Popper,
   Stack,
-  TextField,
+  // TextField,
   Typography,
   useMediaQuery
 } from '@mui/material';
 
 // third-party
-import PerfectScrollbar from 'react-perfect-scrollbar';
+// import PerfectScrollbar from 'react-perfect-scrollbar';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import Transitions from 'ui-component/extended/Transitions';
-import NotificationList from './NotificationList';
+// import NotificationList from './NotificationList';
 
 // assets
 import { IconBell } from '@tabler/icons';
 
 // notification status options
-const status = [
-  {
-    value: 'all',
-    label: 'All Notification'
-  },
-  {
-    value: 'new',
-    label: 'New'
-  },
-  {
-    value: 'unread',
-    label: 'Unread'
-  },
-  {
-    value: 'other',
-    label: 'Other'
-  }
-];
+// const status = [
+//   {
+//     value: 'all',
+//     label: 'All Notification'
+//   },
+//   {
+//     value: 'new',
+//     label: 'New'
+//   },
+//   {
+//     value: 'unread',
+//     label: 'Unread'
+//   },
+//   {
+//     value: 'other',
+//     label: 'Other'
+//   }
+// ];
 
 // ==============================|| NOTIFICATION ||============================== //
 
@@ -59,7 +59,7 @@ const NotificationSection = () => {
   const matchesXs = useMediaQuery(theme.breakpoints.down('md'));
 
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState('');
+  // const [value, setValue] = useState('');
   /**
    * anchorRef is used on different componets and specifying one type leads to other components throwing an error
    * */
@@ -84,9 +84,9 @@ const NotificationSection = () => {
     prevOpen.current = open;
   }, [open]);
 
-  const handleChange = (event) => {
-    if (event?.target.value) setValue(event?.target.value);
-  };
+  // const handleChange = (event) => {
+  //   if (event?.target.value) setValue(event?.target.value);
+  // };
 
   return (
     <>
@@ -170,7 +170,12 @@ const NotificationSection = () => {
                       </Grid>
                     </Grid>
                     <Grid item xs={12}>
-                      <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 205px)', overflowX: 'hidden' }}>
+                      <center>
+                      <Typography variant="caption">
+                        For future development...
+                      </Typography>
+                      </center>
+                      {/* <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 205px)', overflowX: 'hidden' }}>
                         <Grid container direction="column" spacing={2}>
                           <Grid item xs={12}>
                             <Box sx={{ px: 2, pt: 0.25 }}>
@@ -197,7 +202,7 @@ const NotificationSection = () => {
                           </Grid>
                         </Grid>
                         <NotificationList />
-                      </PerfectScrollbar>
+                      </PerfectScrollbar> */}
                     </Grid>
                   </Grid>
                   <Divider />

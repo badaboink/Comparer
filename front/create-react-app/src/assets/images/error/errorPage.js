@@ -1,4 +1,4 @@
-import { useNavigate } from '@remix-run/react';
+import { useNavigate } from 'react';
 
 // material-ui
 import { useTheme, styled } from '@mui/material/styles';

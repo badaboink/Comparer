@@ -53,6 +53,47 @@
   }
 }
 
+.each-slide-effect > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  height: 44rem;
+  min-height: 44rem;
+  max-height: 44rem;
+  min-width: 100rem;
+  max-width: 100rem;
+}
+
+.each-slide-effect span {
+  padding: 5rem;
+  font-size: 1.3rem;
+  line-height: 2.2rem;
+  background: rgba($secondaryMain, 0.95);
+  color: $secondaryLight;
+  text-shadow: 0.1em 0.1em 0.13em rgba(black, 0.3), 0.1em 0.1em 0.13em rgba($secondaryLight, 0.7);
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.img-wrapper{
+  max-height: 100px;
+  overflow: hidden;
+}
+
+.img-wrapper img{
+  width: 50px;
+}
+
+.noselect{   
+	-webkit-touch-callout: none; /* iOS Safari */ 
+	-webkit-user-select: none; /* Safari */ 
+	-khtml-user-select: none; /* Konqueror HTML */ 
+	-moz-user-select: none; /* Firefox */ 
+	-ms-user-select: none; /* Internet Explorer/Edge */ 
+	user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */ 
+} 
+
 // ==============================|| ANIMATION KEYFRAMES ||============================== //
 
 @keyframes wings {

@@ -97,7 +97,6 @@ const FirebaseRegister = ({ ...others }) => {
                 password1: values.password1,
                 password2: values.password2
               };
-              console.log(user);
               const signupResponse = await fetch(SIGNUP_URL, {
                 withCredentials: true,
                 method: 'POST',

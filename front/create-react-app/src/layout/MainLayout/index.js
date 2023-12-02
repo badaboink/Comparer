@@ -1,4 +1,7 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, 
+  // useSelector
+ } from 'react-redux';
 import { Outlet } from 'react-router-dom';
 
 // material-ui
@@ -58,11 +61,30 @@ const MainLayout = () => {
   const theme = useTheme();
   const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
   // Handle left drawer
-  const leftDrawerOpened = useSelector((state) => state.customization.opened);
+  const [leftDrawerOpened, setLeftDrawerOpened] = useState(() => {
+    const savedDrawerState = localStorage.getItem("isItOpen");
+    return savedDrawerState !== null ? JSON.parse(savedDrawerState) : true;
+  });
+
   const dispatch = useDispatch();
+
   const handleLeftDrawerToggle = () => {
-    dispatch({ type: SET_MENU, opened: !leftDrawerOpened });
+    const newLeftDrawerState = !leftDrawerOpened;
+
+    // Update localStorage
+    localStorage.setItem("isItOpen", JSON.stringify(newLeftDrawerState));
+
+    // Update local state
+    setLeftDrawerOpened(newLeftDrawerState);
+
+    // Dispatch the action
+    dispatch({ type: SET_MENU, opened: newLeftDrawerState });
   };
+
+  // Update Redux state on mount
+  useEffect(() => {
+    dispatch({ type: SET_MENU, opened: leftDrawerOpened });
+  }, [dispatch, leftDrawerOpened]);
 
   return (
     <Box sx={{ display: 'flex' }}>

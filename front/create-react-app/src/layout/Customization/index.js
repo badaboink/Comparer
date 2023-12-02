@@ -173,7 +173,7 @@ const Customization = () => {
             </Grid>
             <Grid item xs={12}>
               {/* border radius */}
-              <SubCard title="Border Radius">
+              <SubCard title="Border Radius" hidden>
                 <Grid item xs={12} container spacing={2} alignItems="center" sx={{ mt: 2.5 }}>
                   <Grid item>
                     <Typography variant="h6" color="secondary">
