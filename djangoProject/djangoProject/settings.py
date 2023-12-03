@@ -115,26 +115,26 @@ WSGI_APPLICATION = 'djangoProject.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'mssql',  # Use the SQL Server backend.
-        'HOST': 'comparer.database.windows.net',  # Azure SQL Database server hostname
-        'PORT': '',  # Leave empty or specify if necessary
-        'NAME': 'comparer',  # Your Azure SQL Database name
-        'USER': 'eglej',  # Your Azure SQL Database username
-        'PASSWORD': 'kazkasegle5!',  # Your Azure SQL Database password
-        'OPTIONS': {
-            'driver': 'ODBC Driver 17 for SQL Server',  # The ODBC driver to use
-        },
-    }
     # 'default': {
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'USER': 'root',
-    #     'PASSWORD': '',
-    #     'NAME': 'comparer',
+    #     'ENGINE': 'mssql',  # Use the SQL Server backend.
+    #     'HOST': 'comparer.database.windows.net',  # Azure SQL Database server hostname
+    #     'PORT': '',  # Leave empty or specify if necessary
+    #     'NAME': 'comparer',  # Your Azure SQL Database name
+    #     'USER': 'eglej',  # Your Azure SQL Database username
+    #     'PASSWORD': '',  # Your Azure SQL Database password
     #     'OPTIONS': {
-    #         'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+    #         'driver': 'ODBC Driver 17 for SQL Server',  # The ODBC driver to use
     #     },
     # }
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'USER': 'root',
+        'PASSWORD': '',
+        'NAME': 'comparer',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
+    }
 }
 
 # Password validation

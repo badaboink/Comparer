@@ -69,10 +69,6 @@ add to auth_user_groups that user whose id is 1 is of group 1 (to have one admin
 template from <a href="https://github.com/codedthemes/berry-free-react-admin-template" target="_blank">CodedThemes</a>
 
 ```
-cd create-react-app
-```
-
-```
 npm install
 ```
 
