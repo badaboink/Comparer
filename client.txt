@@ -1,7 +1,0 @@
-curl -X POST -d "grant_type=password&username=username&password=slaptazodis" -u "XGQH9FjzVXvqHlLL0spmif7R2epHwe8iO7hoeDYd:pbkdf2_sha256$600000$x8v6kwWGl8k3KZ3n6tENRW$AX7s65H/oLEZj7xh2wkRBjTJfxDJM9rDCFYlrDsWRLg=" http://localhost:8000/o/token/
-
-client id:
-baCSo9B5nCAddxDq3n5qrBnFpMGWUUsnFpYYKCn0
-
-client secret:
-6O5IPIJohLtZxDvECp3jdZDeqp5mNnq1wR5qRMfX2piQXVxLCBIc02lP470OvqBZt6hymRwWz6TYgpjtIlHaMnRFEAJv1YW54C2SnTw6UVAWB2NaElG0tgJbFwRDDSLk

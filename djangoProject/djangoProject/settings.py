@@ -55,6 +55,7 @@ ROOT_URLCONF = 'djangoProject.urls'
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:3000',
+    'https://yellow-bush-0d2295f03.4.azurestaticapps.net'
 ]
 CSRF_COOKIE_SAMESITE = 'None'
 CSRF_COOKIE_SECURE = False
@@ -62,18 +63,22 @@ SESSION_COOKIE_SECURE = False
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    "https://yellow-bush-0d2295f03.4.azurestaticapps.net"
 ]
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
     "http://127.0.0.1:3000",
+    'https://yellow-bush-0d2295f03.4.azurestaticapps.net'
 ]
 CSRF_ORIGINS = [
     'http://localhost:3000',
     "http://127.0.0.1:3000",
+    'https://yellow-bush-0d2295f03.4.azurestaticapps.net'
 ]
-CSRF_ALLOWED  = [
+CSRF_ALLOWED = [
     'http://localhost:3000',
     "http://127.0.0.1:3000",
+    'https://yellow-bush-0d2295f03.4.azurestaticapps.net'
 ]
 CORS_ALLOW_CREDENTIALS = True
 SESSION_COOKIE_SAMESITE = None
@@ -110,26 +115,26 @@ WSGI_APPLICATION = 'djangoProject.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'mssql',  # Use the SQL Server backend.
-    #     'HOST': 'comparer.database.windows.net',  # Azure SQL Database server hostname
-    #     'PORT': '',  # Leave empty or specify if necessary
-    #     'NAME': 'comparer',  # Your Azure SQL Database name
-    #     'USER': 'eglej',  # Your Azure SQL Database username
-    #     'PASSWORD': 'kazkasegle5!',  # Your Azure SQL Database password
-    #     'OPTIONS': {
-    #         'driver': 'ODBC Driver 17 for SQL Server',  # The ODBC driver to use
-    #     },
-    # }
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'USER': 'root',
-        'PASSWORD': '',
-        'NAME': 'comparer',
+        'ENGINE': 'mssql',  # Use the SQL Server backend.
+        'HOST': 'comparer.database.windows.net',  # Azure SQL Database server hostname
+        'PORT': '',  # Leave empty or specify if necessary
+        'NAME': 'comparer',  # Your Azure SQL Database name
+        'USER': 'eglej',  # Your Azure SQL Database username
+        'PASSWORD': 'kazkasegle5!',  # Your Azure SQL Database password
         'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            'driver': 'ODBC Driver 17 for SQL Server',  # The ODBC driver to use
         },
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'USER': 'root',
+    #     'PASSWORD': '',
+    #     'NAME': 'comparer',
+    #     'OPTIONS': {
+    #         'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+    #     },
+    # }
 }
 
 # Password validation
@@ -174,4 +179,22 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('JWT',),
 }
+
+DROPBOX_APP_KEY = 'h5icq9e30mtr3rz'
+DROPBOX_APP_SECRET = 'r4l2c16ggrwvaso'
+DROPBOX_OAUTH2_REFRESH_TOKEN = '8z2k7Y40F0EAAAAAAAAAAeedQHjrdZ2ftG5H55lnQxlLyZwg-AAOkbR4MiiG_aQi'
+DROPBOX_ROOT_PATH = "/"
+
+DROPBOX_OAUTH2_TOKEN = 'sl.Bq6LL6ujjEhBqFBSfBHLseEbZ3E2zqu5pH33S6XYQbUThjm9pWHYVV2Ryv6UoHisDHZOADuDZXcs49_CmAK177CSdJV_J_SeppKcevuEQ_ZNDPBFwVR4cufo2ZTBJclY8ZpUtz7QvgieCEHCqVPVUDI'
+
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.dropbox.DropBoxStorage",
+        "OPTIONS": {
+
+        },
+    },
+}
+# DROPBOX_OAUTH2_TOKEN = 'sl.Bq6LL6ujjEhBqFBSfBHLseEbZ3E2zqu5pH33S6XYQbUThjm9pWHYVV2Ryv6UoHisDHZOADuDZXcs49_CmAK177CSdJV_J_SeppKcevuEQ_ZNDPBFwVR4cufo2ZTBJclY8ZpUtz7QvgieCEHCqVPVUDI'
+# DROPBOX_ACCESS_TOKEN = 'qPmi8osOIkMAAAAAAAABJy4P-Dcpql_mNNAzh3ZcNu4'
 

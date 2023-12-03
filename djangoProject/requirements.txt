@@ -8,3 +8,5 @@ gunicorn
 PyJWT==2.8.0
 pytz==2023.3.post1
 djangorestframework-simplejwt==5.3.0
+django-storages
+dropbox

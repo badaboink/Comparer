@@ -40,7 +40,6 @@ class PlaylistSerializer(serializers.ModelSerializer):
         return representation
 
     def create(self, validated_data):
-        validated_data['playlist_owner'] = self.context['request'].user
         return super().create(validated_data)
 
     def validate(self, data):
@@ -59,13 +58,17 @@ class PlaylistSerializer(serializers.ModelSerializer):
 
 class SongSerializer(serializers.ModelSerializer):
     song_owner = serializers.ReadOnlyField()
+    playlist = serializers.PrimaryKeyRelatedField(
+        queryset=Playlist.objects.all(),
+        many=True,
+        required=False
+    )
 
     class Meta:
         model = Song
         fields = '__all__'
 
     def create(self, validated_data):
-        validated_data['song_owner'] = self.context['request'].user
         return super().create(validated_data)
 
     def to_representation(self, instance):
